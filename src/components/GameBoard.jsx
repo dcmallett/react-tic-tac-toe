@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 const intialGameBoard = [
   //multi-dimensional array
   [null, null, null],
@@ -7,23 +5,35 @@ const intialGameBoard = [
   [null, null, null],
 ]
 
-export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
+export default function GameBoard({ onSelectSquare, turns }) {
 
-  const [gameBoard, setGameBoard] = useState(intialGameBoard)
+  let gameBoard = intialGameBoard;
 
-  function handleSelectSquare(rowIndex, colsIndex) {
-    setGameBoard((prevGameBoard) => {
-      //if we are updating arrays or objs we need to do it in an immuatable way.
-      //so we need to take a copy of the state in this case prevGameBoard. and we then pass that
-      //into a const / variable to be used elsewhere. if we are using nested arrays they need to be copied as well.
-      // by using the map method
-      const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])]
-      updatedBoard[rowIndex][colsIndex] = activePlayerSymbol
-      return updatedBoard;
-    })
+  for(const turn of turns) {
+    //if turns is an empty [] this wont execute
+    const { square, player } = turn;
+    const { row, col } = square;
 
-    onSelectSquare();
+    //we are diriving state. (computed value) that is derived from the gameTurns state
+    //
+    gameBoard[row][col] = player;
   }
+
+  // const [gameBoard, setGameBoard] = useState(intialGameBoard)
+
+  // function handleSelectSquare(rowIndex, colsIndex) {
+  //   setGameBoard((prevGameBoard) => {
+  //     //if we are updating arrays or objs we need to do it in an immuatable way.
+  //     //so we need to take a copy of the state in this case prevGameBoard. and we then pass that
+  //     //into a const / variable to be used elsewhere. if we are using nested arrays they need to be copied as well.
+  //     // by using the map method
+  //     const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])]
+  //     updatedBoard[rowIndex][colsIndex] = activePlayerSymbol
+  //     return updatedBoard;
+  //   })
+
+  //   onSelectSquare();
+  // }
 
 
   return (
@@ -37,7 +47,7 @@ export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
         <ol>
           {row.map((playerSymbol, colsIndex) => <li key={colsIndex}>
             <button 
-              onClick={() => handleSelectSquare(rowIndex, colsIndex)}>
+              onClick={() => onSelectSquare(rowIndex, colsIndex)}>
                 {playerSymbol}
             </button>
           </li>)}
