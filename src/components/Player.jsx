@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Player({ initialName, symbol, isActive }) {
+export default function Player({ initialName, symbol, isActive, onChangeName }) {
 
   const  [ playerName, setPlayerName ] = useState(initialName);
   const [ isEditing, setIsEditing ] = useState(false); 
@@ -11,6 +11,10 @@ export default function Player({ initialName, symbol, isActive }) {
     //using the function form. You garentee you are always updating the 
     //previous state value
     setIsEditing((editing) => !isEditing)
+
+    if(isEditing) {
+      onChangeName(symbol, playerName)
+    }
   }
 
   //function for change when you change the player name
